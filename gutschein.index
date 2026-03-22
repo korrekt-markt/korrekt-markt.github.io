@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KORREKT. Gutscheinguthaben prüfen</title>
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+  <meta name="theme-color" content="#111" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Montserrat", sans-serif;
+      background: #111;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(90deg, #333, #444);
+      padding: 0.8rem 2rem;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .logo img {
+      height: 44px;
+      display: block;
+    }
+
+    .icons {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .icons img {
+      display: block;
+      height: 32px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .hero {
+      margin-top: 4.8rem;
+      min-height: 88vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        linear-gradient(rgba(0,0,0,0.58), rgba(0,0,0,0.72)),
+        url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1600&q=80');
+      background-size: cover;
+      background-position: center;
+      padding: 3rem 1.2rem;
+    }
+
+    .check-wrapper {
+      width: 100%;
+      max-width: 1120px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 2rem;
+      align-items: stretch;
+    }
+
+    .info-panel,
+    .card-panel {
+      background: rgba(28, 28, 28, 0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(8px);
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    .info-panel {
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      background: rgba(255, 10, 122, 0.14);
+      color: #ff0a7a;
+      font-weight: 700;
+      padding: 0.45rem 0.85rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .info-panel h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.05;
+      color: #ff0a7a;
+    }
+
+    .info-panel p {
+      color: #ddd;
+      font-size: 1.06rem;
+      line-height: 1.7;
+      margin-top: 1rem;
+      max-width: 580px;
+    }
+
+    .hero-features {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.8rem;
+    }
+
+    .feature {
+      background: #222;
+      border-radius: 16px;
+      padding: 1rem 1.1rem;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .feature strong {
+      display: block;
+      color: #00a7a0;
+      font-size: 1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .feature span {
+      color: #d8d8d8;
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+
+    .card-panel {
+      padding: 2rem;
+    }
+
+    .card-panel h2 {
+      margin: 0 0 0.4rem;
+      font-size: 1.8rem;
+      color: #fff;
+    }
+
+    .card-panel .sub {
+      margin: 0 0 1.6rem;
+      color: #bcbcbc;
+      line-height: 1.5;
+      font-size: 0.96rem;
+    }
+
+    .field {
+      margin-bottom: 1rem;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 0.45rem;
+      font-weight: 600;
+      color: #f2f2f2;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 0.95rem 1rem;
+      border-radius: 16px;
+      border: 1px solid #3a3a3a;
+      background: #1b1b1b;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field input:focus {
+      border-color: #00a7a0;
+      box-shadow: 0 0 0 3px rgba(0, 167, 160, 0.15);
+    }
+
+    .button-row {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-top: 1.2rem;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0.9rem 1.3rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, opacity 0.18s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.03);
+    }
+
+    .btn-primary {
+      background: linear-gradient(45deg, #ff0a7a, #00a7a0);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: #2a2a2a;
+      color: #fff;
+      border: 1px solid #3b3b3b;
+    }
+
+    .status-box {
+      margin-top: 1.2rem;
+      border-radius: 18px;
+      padding: 1rem 1.1rem;
+      display: none;
+      font-weight: 600;
+    }
+
+    .status-box.show {
+      display: block;
+    }
+
+    .status-box.loading {
+      background: rgba(0, 167, 160, 0.12);
+      color: #73f0ea;
+      border: 1px solid rgba(0, 167, 160, 0.24);
+    }
+
+    .status-box.error {
+      background: rgba(255, 10, 122, 0.12);
+      color: #ff90c0;
+      border: 1px solid rgba(255, 10, 122, 0.24);
+    }
+
+    .status-box.success {
+      background: rgba(55, 200, 110, 0.14);
+      color: #9ff0be;
+      border: 1px solid rgba(55, 200, 110, 0.24);
+    }
+
+    .result-card {
+      margin-top: 1.4rem;
+      display: none;
+      background: linear-gradient(180deg, #2a2a2a, #1b1b1b);
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .result-card.show {
+      display: block;
+    }
+
+    .result-head {
+      padding: 1.2rem 1.3rem;
+      background: linear-gradient(45deg, rgba(255,10,122,0.18), rgba(0,167,160,0.18));
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .result-head h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: #fff;
+    }
+
+    .result-head p {
+      margin: 0.4rem 0 0;
+      color: #d6d6d6;
+      font-size: 0.95rem;
+    }
+
+    .balance-main {
+      padding: 1.5rem 1.3rem 0.6rem;
+      text-align: center;
+    }
+
+    .balance-label {
+      color: #aaa;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .balance-value {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #00a7a0;
+      line-height: 1;
+    }
+
+    .meta-grid {
+      padding: 1.2rem 1.3rem 1.4rem;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem;
+    }
+
+    .meta-item {
+      background: #222;
+      border-radius: 16px;
+      padding: 0.95rem 1rem;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .meta-item .k {
+      display: block;
+      color: #989898;
+      font-size: 0.84rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .meta-item .v {
+      display: block;
+      color: #fff;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .badge.active {
+      background: rgba(55, 200, 110, 0.15);
+      color: #97edb9;
+    }
+
+    .badge.blocked,
+    .badge.expired,
+    .badge.redeemed,
+    .badge.inactive {
+      background: rgba(255, 10, 122, 0.15);
+      color: #ff9ac8;
+    }
+
+    .foot-note {
+      margin-top: 1rem;
+      color: #9f9f9f;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    footer {
+      background: #111;
+      color: white;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 2rem;
+      padding: 3rem;
+    }
+
+    footer h3 {
+      color: #ff0a7a;
+    }
+
+    footer a {
+      color: #bbb;
+      text-decoration: none;
+      display: block;
+      margin: 0.3rem 0;
+    }
+
+    footer a:hover {
+      color: #fff;
+    }
+
+    .copyright {
+      background: #000;
+      color: #aaa;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 960px) {
+      .check-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-features,
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .info-panel,
+      .card-panel {
+        padding: 1.4rem;
+      }
+
+      .balance-value {
+        font-size: 2.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="https://korrekt-markt.de/korrekt.png" alt="KORREKT Logo" />
+    </div>
+
+    <div class="icons">
+      <span title="korrektPlus">
+        <a href="https://plus.korrekt-markt.de">
+          <img src="https://korrekt-markt.de/korrektPlus-web_transparent.png" alt="korrektPlus Logo" />
+        </a>
+      </span>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="check-wrapper">
+      <div class="info-panel">
+        <span class="eyebrow">KORREKT. Gutscheinservice</span>
+        <h1>Gutscheinguthaben einfach prüfen.</h1>
+        <p>
+          Gib hier deine 16-stellige Kartennummer und deinen Einlösecode ein,
+          um das aktuelle Guthaben deiner KORREKT. Gutscheinkarte abzurufen.
+          Echt. Regional. Voll KORREKT.
+        </p>
+
+        <div class="hero-features">
+          <div class="feature">
+            <strong>Sicher prüfen</strong>
+            <span>Abfrage nur mit Kartennummer und Einlösecode.</span>
+          </div>
+          <div class="feature">
+            <strong>Sofort sichtbar</strong>
+            <span>Guthaben, Kartenstatus und letzte Nutzung auf einen Blick.</span>
+          </div>
+          <div class="feature">
+            <strong>Für Markt & Online</strong>
+            <span>Physische und digitale Gutscheinkarten unterstützt.</span>
+          </div>
+          <div class="feature">
+            <strong>KORREKT. Stil</strong>
+            <span>Nahtlos passend zu deiner bestehenden Website.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-panel">
+        <h2>Guthaben prüfen</h2>
+        <p class="sub">
+          Bitte trage deine Kartendaten ein. Die Abfrage erfolgt direkt über dein KORREKT.-System.
+        </p>
+
+        <form id="giftCardForm">
+          <div class="field">
+            <label for="cardNumber">Kartennummer</label>
+            <input
+              type="text"
+              id="cardNumber"
+              name="cardNumber"
+              maxlength="16"
+              inputmode="numeric"
+              placeholder="z. B. 5829041736251847"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="field">
+            <label for="redeemCode">Einlösecode</label>
+            <input
+              type="text"
+              id="redeemCode"
+              name="redeemCode"
+              maxlength="20"
+              placeholder="z. B. K8X4P2Q9"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="button-row">
+            <button class="btn btn-primary" type="submit">Guthaben abrufen</button>
+            <button class="btn btn-secondary" type="button" id="fillDemoBtn">Demo einfügen</button>
+          </div>
+        </form>
+
+        <div id="statusBox" class="status-box"></div>
+
+        <div id="resultCard" class="result-card">
+          <div class="result-head">
+            <h3>KORREKT. Gutscheinkarte</h3>
+            <p id="resultMessage">Abfrage erfolgreich</p>
+          </div>
+
+          <div class="balance-main">
+            <div class="balance-label">Aktuelles Guthaben</div>
+            <div class="balance-value" id="balanceValue">0,00 €</div>
+          </div>
+
+          <div class="meta-grid">
+            <div class="meta-item">
+              <span class="k">Kartennummer</span>
+              <span class="v" id="maskedCardNumber">-</span>
+            </div>
+
+            <div class="meta-item">
+              <span class="k">Barcode</span>
+              <span class="v" id="maskedBarcode">-</span>
+            </div>
+
+            <div class="meta-item">
+              <span class="k">Status</span>
+              <span class="v" id="statusValue">-</span>
+            </div>
+
+            <div class="meta-item">
+              <span class="k">Kartentyp</span>
+              <span class="v" id="designValue">-</span>
+            </div>
+
+            <div class="meta-item">
+              <span class="k">Digital</span>
+              <span class="v" id="digitalValue">-</span>
+            </div>
+
+            <div class="meta-item">
+              <span class="k">Letzte Nutzung</span>
+              <span class="v" id="lastUsedValue">-</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="foot-note">
+          Hinweis: Bei gesperrten, abgelaufenen oder bereits vollständig eingelösten Karten
+          kann die Nutzung im Markt eingeschränkt sein.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>
+      <h3>Service</h3>
+      <a href="#">Hilfe & FAQ</a>
+      <a href="#">Kontakt</a>
+      <a href="#">Gutscheinkarten</a>
+    </div>
+    <div>
+      <h3>Unternehmen</h3>
+      <a href="#">Über uns</a>
+      <a href="/impressum">Impressum</a>
+      <a href="#">Presse</a>
+    </div>
+    <div>
+      <h3>Karriere</h3>
+      <a href="#">Jobs</a>
+      <a href="#">Ausbildung</a>
+      <a href="#">Initiativbewerbung</a>
+    </div>
+    <div>
+      <h3>Folge uns</h3>
+      <a href="#">Instagram</a>
+      <a href="#">Facebook</a>
+      <a href="#">LinkedIn</a>
+    </div>
+  </footer>
+
+  <div class="copyright">© 2026 KORREKT. Markt – neu gedacht, echt KORREKT.</div>
+
+  <script>
+    const SUPABASE_URL = "YOUR_SUPABASE_URL";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const form = document.getElementById("giftCardForm");
+    const cardNumberInput = document.getElementById("cardNumber");
+    const redeemCodeInput = document.getElementById("redeemCode");
+    const fillDemoBtn = document.getElementById("fillDemoBtn");
+
+    const statusBox = document.getElementById("statusBox");
+    const resultCard = document.getElementById("resultCard");
+
+    const resultMessage = document.getElementById("resultMessage");
+    const balanceValue = document.getElementById("balanceValue");
+    const maskedCardNumber = document.getElementById("maskedCardNumber");
+    const maskedBarcode = document.getElementById("maskedBarcode");
+    const statusValue = document.getElementById("statusValue");
+    const designValue = document.getElementById("designValue");
+    const digitalValue = document.getElementById("digitalValue");
+    const lastUsedValue = document.getElementById("lastUsedValue");
+
+    function showStatus(type, message) {
+      statusBox.className = `status-box show ${type}`;
+      statusBox.textContent = message;
+    }
+
+    function hideStatus() {
+      statusBox.className = "status-box";
+      statusBox.textContent = "";
+    }
+
+    function hideResult() {
+      resultCard.classList.remove("show");
+    }
+
+    function formatGermanDate(dateString) {
+      if (!dateString) return "Noch keine Nutzung";
+      const date = new Date(dateString);
+      return new Intl.DateTimeFormat("de-DE", {
+        dateStyle: "medium",
+        timeStyle: "short"
+      }).format(date);
+    }
+
+    function translateDesignType(type) {
+      const map = {
+        standard: "Standard",
+        birthday: "Geburtstag",
+        event: "Event",
+        christmas: "Weihnachten"
+      };
+      return map[type] || type || "-";
+    }
+
+    function createStatusBadge(status) {
+      const badge = document.createElement("span");
+      badge.className = `badge ${status || "inactive"}`;
+
+      const map = {
+        active: "Aktiv",
+        blocked: "Gesperrt",
+        redeemed: "Eingelöst",
+        expired: "Abgelaufen",
+        inactive: "Inaktiv"
+      };
+
+      badge.textContent = map[status] || status || "Unbekannt";
+      return badge;
+    }
+
+    async function checkBalance(cardNumber, redeemCode) {
+      showStatus("loading", "Gutscheinguthaben wird abgerufen ...");
+      hideResult();
+
+      const { data, error } = await supabaseClient.rpc("check_gift_card_balance", {
+        p_card_number: cardNumber,
+        p_redeem_code: redeemCode
+      });
+
+      if (error) {
+        showStatus("error", "Fehler bei der Verbindung zum KORREKT.-System.");
+        console.error(error);
+        return;
+      }
+
+      if (!data || !Array.isArray(data) || data.length === 0) {
+        showStatus("error", "Keine Antwort vom System erhalten.");
+        return;
+      }
+
+      const result = data[0];
+
+      if (!result.success) {
+        showStatus("error", result.message || "Abfrage fehlgeschlagen.");
+        return;
+      }
+
+      showStatus("success", result.message || "Gutscheinkarte erfolgreich geprüft.");
+      resultMessage.textContent = result.message || "Abfrage erfolgreich";
+      balanceValue.textContent = result.balance_eur || "0,00 €";
+      maskedCardNumber.textContent = result.card_number_masked || "-";
+      maskedBarcode.textContent = result.barcode_masked || "-";
+      designValue.textContent = translateDesignType(result.design_type);
+      digitalValue.textContent = result.is_digital ? "Ja" : "Nein";
+      lastUsedValue.textContent = formatGermanDate(result.last_used_at);
+
+      statusValue.innerHTML = "";
+      statusValue.appendChild(createStatusBadge(result.status));
+
+      resultCard.classList.add("show");
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const cardNumber = cardNumberInput.value.replace(/\s+/g, "").trim();
+      const redeemCode = redeemCodeInput.value.trim();
+
+      if (!/^\d{16}$/.test(cardNumber)) {
+        showStatus("error", "Bitte eine gültige 16-stellige Kartennummer eingeben.");
+        hideResult();
+        return;
+      }
+
+      if (redeemCode.length < 6) {
+        showStatus("error", "Bitte einen gültigen Einlösecode eingeben.");
+        hideResult();
+        return;
+      }
+
+      await checkBalance(cardNumber, redeemCode);
+    });
+
+    fillDemoBtn.addEventListener("click", () => {
+      cardNumberInput.value = "5829041736251847";
+      redeemCodeInput.value = "K8X4P2Q9";
+      hideStatus();
+      hideResult();
+    });
+  </script>
+</body>
+</html>
