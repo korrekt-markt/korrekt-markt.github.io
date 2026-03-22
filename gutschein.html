@@ -469,15 +469,14 @@
         <form id="giftCardForm">
           <div class="field">
             <label for="cardNumber">Kartennummer</label>
-            <input
-              type="text"
-              id="cardNumber"
-              name="cardNumber"
-              maxlength="16"
-              inputmode="numeric"
-              placeholder="z. B. 5829041736251847"
-              autocomplete="off"
-            />
+<input
+  type="text"
+  id="cardNumber"
+  maxlength="19"
+  inputmode="numeric"
+  placeholder="z. B. 5829 0417 3625 1847"
+  autocomplete="off"
+/>
           </div>
 
           <div class="field">
@@ -588,7 +587,7 @@
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const form = document.getElementById("giftCardForm");
-    const cardNumberInput = document.getElementById("cardNumber");
+const cardNumber = cardNumberInput.value.replace(/\s+/g, "").trim();
     const redeemCodeInput = document.getElementById("redeemCode");
     const fillDemoBtn = document.getElementById("fillDemoBtn");
 
@@ -722,6 +721,21 @@
       hideStatus();
       hideResult();
     });
+
+    cardNumberInput.addEventListener("input", (e) => {
+  let value = e.target.value;
+
+  // alles außer Zahlen entfernen
+  value = value.replace(/\D/g, "");
+
+  // auf 16 Stellen begrenzen
+  value = value.substring(0, 16);
+
+  // in 4er Blöcke aufteilen
+  const formatted = value.match(/.{1,4}/g);
+
+  e.target.value = formatted ? formatted.join(" ") : "";
+});
   </script>
 </body>
 </html>
