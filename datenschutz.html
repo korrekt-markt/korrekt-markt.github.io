@@ -1,36 +1,184 @@
-<h2>Datenschutzerklärung</h2>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Datenschutzerklärung – KORREKT. Markt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: "Montserrat", sans-serif;
+      background: #111;
+      color: #eee;
+      overflow-x: hidden;
+    }
 
-<p>
-Der Schutz Ihrer persönlichen Daten ist uns wichtig. Nachfolgend informieren wir Sie über die Verarbeitung personenbezogener Daten auf dieser Website.
-</p>
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(90deg, #333, #444);
+      padding: 0.8rem 2rem;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .logo img { height: 44px; }
+    .search {
+      flex: 0 0 340px;
+      margin: 0 1.5rem;
+      position: relative;
+    }
+    .search input {
+      width: 100%;
+      padding: 0.7rem 1.2rem;
+      border-radius: 40px;
+      border: none;
+      background: #222;
+      color: #eee;
+      font-size: 1rem;
+      padding-left: 2.6rem;
+      box-shadow: inset 0 0 4px rgba(0,0,0,0.4);
+    }
+    .search::before {
+      content: "🔍";
+      position: absolute;
+      left: 0.9rem;
+      top: 0.55rem;
+      opacity: 0.7;
+      font-size: 1.1rem;
+    }
+    .icons {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+    .icons span:hover { color: #ff0a7a; }
+    .icons img {
+      height: 30px;
+      width: auto;
+      object-fit: contain;
+    }
 
-<h3>1. Verantwortlicher</h3>
-<p>
-Evan Herzig<br>
-Friedrich-Schneider-Str. 66<br>
-06844 Dessau-Roßlau<br>
-Deutschland<br>
-E-Mail: unternehmens@korrekt-markt.de
-</p>
+    main {
+      max-width: 900px;
+      margin: 6rem auto 4rem;
+      padding: 2rem;
+      background: #1a1a1a;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
 
-<h3>2. Zugriffsdaten (Server-Logfiles)</h3>
-<p>
-Beim Aufrufen dieser Website werden durch den Hostinganbieter automatisch Informationen erfasst. Dies sind:
-IP-Adresse, Datum und Uhrzeit der Anfrage, Browsertyp und Betriebssystem.
-Diese Daten dienen der Sicherstellung eines störungsfreien Betriebs und werden nicht zur Identifizierung der Person verwendet.
-</p>
+    main h1 {
+      color: #ff0a7a;
+      font-size: 2.4rem;
+      text-align: center;
+    }
+    main h2 {
+      color: #00a7a0;
+      margin-top: 2rem;
+    }
+    main p {
+      line-height: 1.7;
+      color: #ddd;
+    }
 
-<h3>3. Kontaktaufnahme</h3>
-<p>
-Wenn Sie uns per E-Mail kontaktieren, werden Ihre Angaben zur Bearbeitung der Anfrage gespeichert.
-</p>
+    footer {
+      background: #111;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 2rem;
+      padding: 3rem;
+    }
+    footer h3 { color: #ff0a7a; }
+    footer a {
+      color: #bbb;
+      text-decoration: none;
+      display: block;
+    }
+    footer a:hover { color: #fff; }
 
-<h3>4. Ihre Rechte</h3>
-<p>
-Sie haben das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Verarbeitung Ihrer Daten.
-</p>
+    .copyright {
+      background: #000;
+      color: #aaa;
+      text-align: center;
+      padding: 1rem;
+    }
+  </style>
+</head>
+<body>
 
-<h3>5. Änderungen</h3>
-<p>
-Wir behalten uns vor, diese Datenschutzerklärung anzupassen.
-</p>
+<header>
+  <div class="logo">
+    <img src="https://korrekt-markt.de/korrekt.png" />
+  </div>
+  <div class="search">
+    <input type="text" placeholder="Suche..." />
+  </div>
+  <div class="icons">
+    <span>👤</span>
+    <span>📍</span>
+    <span><img src="https://korrekt-markt.de/korrektPlus-web_transparent.png"></span>
+  </div>
+</header>
+
+<main>
+  <h1>Datenschutzerklärung</h1>
+
+  <h2>1. Verantwortlicher</h2>
+  <p>
+    Evan Herzig<br>
+    Friedrich-Schneider-Str. 66<br>
+    06844 Dessau-Roßlau<br>
+    Deutschland<br><br>
+    E-Mail: unternehmens@korrekt-markt.de
+  </p>
+
+  <h2>2. Zugriffsdaten (Server-Logfiles)</h2>
+  <p>
+    Beim Besuch dieser Website werden automatisch Informationen durch den Server erfasst.
+    Dazu gehören IP-Adresse, Datum und Uhrzeit, Browsertyp und Betriebssystem.
+    Diese Daten dienen der Sicherstellung eines störungsfreien Betriebs.
+  </p>
+
+  <h2>3. Kontaktaufnahme</h2>
+  <p>
+    Wenn Sie uns per E-Mail kontaktieren, werden Ihre Angaben zur Bearbeitung gespeichert.
+  </p>
+
+  <h2>4. Google Fonts</h2>
+  <p>
+    Diese Website nutzt Schriftarten von 
+    :contentReference[oaicite:0]{index=0}.
+    Beim Aufruf der Seite wird eine Verbindung zu Servern von Google hergestellt.
+  </p>
+
+  <h2>5. Ihre Rechte</h2>
+  <p>
+    Sie haben das Recht auf Auskunft, Berichtigung, Löschung sowie Einschränkung der Verarbeitung Ihrer Daten.
+  </p>
+
+  <h2>6. Änderungen</h2>
+  <p>
+    Wir behalten uns vor, diese Datenschutzerklärung anzupassen.
+  </p>
+</main>
+
+<footer>
+  <div>
+    <h3>Rechtliches</h3>
+    <a href="/impressum">Impressum</a>
+    <a href="/datenschutz">Datenschutz</a>
+  </div>
+</footer>
+
+<div class="copyright">
+  © 2025 KORREKT Markt – neu gedacht, echt KORREKT.
+</div>
+
+</body>
+</html>
